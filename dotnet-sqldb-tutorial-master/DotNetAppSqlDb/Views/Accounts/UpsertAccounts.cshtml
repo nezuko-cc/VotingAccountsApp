@@ -1,0 +1,32 @@
+﻿@model DotNetAppSqlDb.ViewModels.UpsertViewModel
+
+@{ ViewBag.Title = "Upsert"; }
+
+<h2>更新打投號類別(改為搶投或是改成非搶投) & 加入新帳號</h2>
+
+
+@using (Html.BeginForm())
+{
+@Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+
+                    <div class="form-group">
+                        <label for="textAreaAccounts">帳號跟密碼在此輸入</label>
+                        <textarea class="form-control" name=" " id="textAreaAccounts" rows="5"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Create" class="btn btn-default" />
+                        </div>
+                    </div>
+                </div>}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", "Accounts")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
