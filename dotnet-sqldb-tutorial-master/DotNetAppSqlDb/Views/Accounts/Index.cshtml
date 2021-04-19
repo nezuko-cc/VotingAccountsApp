@@ -1,0 +1,26 @@
+﻿@model DotNetAppSqlDb.ViewModels.IndexViewModel
+@{ 
+    ViewBag.Title = "Index"; 
+}
+
+<h2>領號</h2>
+
+
+@using (Html.BeginForm("GetAccounts", "Accounts", FormMethod.Get))
+{
+
+    <p>輸入想領的量，記得要複製存到別的地方，下次不保證會取到這組號(1-200)</p>
+    <input type="number" name="Count" id="Count" min="1" max="200" value="10" class="form-control" required />
+
+    <select name="AccountType" id="AccountType" class="form-control" required>
+        <option value="Urgent">搶投</option>
+        <option value="Normal">普通散投</option>
+    </select>
+
+    <input type="submit" value="領取打投號" class="btn btn-primary" />
+    <br />
+
+    @Html.ValidationMessageFor(model => model.Count, "", new { @class = "text-danger" })
+    @Html.ValidationMessageFor(model => model.AccountType, "", new { @class = "text-danger" })
+    @Html.ValidationMessageFor(model => model.ErrorMsg, "", new { @class = "text-danger" })
+}
