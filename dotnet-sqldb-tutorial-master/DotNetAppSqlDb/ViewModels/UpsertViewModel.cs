@@ -9,8 +9,10 @@ namespace DotNetAppSqlDb.ViewModels
     {
         public string Input { get; set; }
 
-        public AccountType? NewAccountType { get; set; }
+        public String NewAccountType { get; set; }
 
         public string AdminSecretToken { get; set; }
+
+        public HttpPostedFileBase UploadedCSVFile { get; set; }
     }
 }

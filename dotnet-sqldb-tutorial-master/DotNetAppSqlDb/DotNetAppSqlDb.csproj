@@ -199,7 +199,7 @@
     <Content Include="Views\Accounts\Index.cshtml" />
     <Content Include="Views\Accounts\Create.cshtml" />
     <Content Include="Views\Accounts\GetAccounts.cshtml" />
-    <Content Include="Views\Accounts\UpsertAccounts.cshtml" />
+    <Content Include="Views\Accounts\Upsert.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

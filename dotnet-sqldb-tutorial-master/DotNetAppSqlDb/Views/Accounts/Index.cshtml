@@ -4,11 +4,13 @@
 }
 
 <h2>領號</h2>
+@*<h4>搶投剩餘:</h4>
+<h4>普通剩餘:</h4>*@
 
 
 @using (Html.BeginForm("GetAccounts", "Accounts", FormMethod.Get))
 {
-
+    
     <p>輸入想領的量，記得要複製存到別的地方，下次不保證會取到這組號(1-200)</p>
     <input type="number" name="Count" id="Count" min="1" max="200" value="10" class="form-control" required />
 

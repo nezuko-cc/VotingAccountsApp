@@ -34,7 +34,7 @@ namespace DotNetAppSqlDb
             routes.MapRoute(
                name: "UpsertAccounts",                                               // Route name
                url: "Upsert",                                                // URL with parameters
-               new { controller = "Accounts", action = "UpsertAccounts", id = "" }  // Parameter defaults
+               new { controller = "Accounts", action = "Upsert", id = "" }  // Parameter defaults
            );
         }
     }

@@ -1,0 +1,38 @@
+﻿@model DotNetAppSqlDb.ViewModels.UpsertViewModel
+
+@{ ViewBag.Title = "Upsert"; }
+
+<h2>改普通號為搶投 或是 改搶投號為普通號) & 加入新帳號</h2>
+
+
+@using (Html.BeginForm("Upsert", "Accounts", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+@Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+
+    <div class="form-group">
+        <div class="col-md-6">
+            <label for="textAreaAccounts">在此輸入帳號跟密碼</label>
+            @*<textarea class="form-control" name=" " id="textAreaAccounts" rows="5"></textarea>*@
+            @*@Html.TextAreaFor(model => model.Input, new { htmlAttributes = new { @class = "form-control", rows = "10", id = "txtPlace", cols = "150" } })*@
+            <input name="UploadedCSVFile" type="file" />
+            @Html.ValidationMessageFor(model => model.Input, "", new { @class = "text-danger" })
+            <select name="newAccountType" id="newAccountType" class="form-control" required>
+                <option value="Urgent">搶投</option>
+                <option value="Normal">普通散投</option>
+            </select>
+            @Html.EditorFor(model => model.AdminSecretToken, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+        <div class="col-md-2">
+            <input type="submit" value="Upsert" class="btn btn-default" />
+        </div>
+        <div class="col-md-4">
+                範例!!
+        </div>
+    </div>
+</div>}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

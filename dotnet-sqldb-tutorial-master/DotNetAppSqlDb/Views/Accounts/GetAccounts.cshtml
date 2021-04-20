@@ -12,6 +12,9 @@
             <th scope="col">
                 密碼
             </th>
+            <th scope="col">
+                搶投/普通
+            </th>
         </tr>
     </thead>
 
@@ -24,6 +27,19 @@
     <td>
         @Html.DisplayFor(modelItem => item.Password)
     </td>
+
+    @if (item.AccountType == "Urgent")
+    {
+    <td>
+        <p style="color:red;">搶投 </p>
+    </td>
+    }
+    else
+    {
+    <td>
+        <p>普通 </p>
+    </td>
+    }
 </tr>
 }
 

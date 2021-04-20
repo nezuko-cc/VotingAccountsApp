@@ -10,6 +10,7 @@ using DotNetAppSqlDb.Models;
 using System.Diagnostics;
 using DotNetAppSqlDb.ViewModels;
 using System.Text;
+using System.IO;
 
 namespace DotNetAppSqlDb.Controllers
 {
@@ -19,19 +20,13 @@ namespace DotNetAppSqlDb.Controllers
         private static int MaxCcount = 200;
         private static string AvailableState = "Open";
         private static string UnavailableState = "Claimed";
+        private static char AccountPasswordSeparator = '-';
 
         // Homepage
         public ActionResult Index()
         {
             return View();
         }
-
-        // Homepage
-        public ActionResult UpsertAccounts()
-        {
-            return View();
-        }
-
 
         public ActionResult GetAccounts(IndexViewModel indexViewModel)
         {
@@ -142,26 +137,100 @@ namespace DotNetAppSqlDb.Controllers
 
         public ActionResult Upsert()
         {
-            Trace.WriteLine("GET /Account/Upsert");
+            Trace.WriteLine("GET /Accounts/Upsert");
             return View();
         }
+
+        //// Bulk upsert
+        //// POST: Accounts/Upsert
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Upsert(UpsertViewModel upsertViewModel)
+        //{
+        //    Trace.WriteLine("POST /Accounts/Upsert");
+
+        //    //string[] accountArray = upsertViewModel.Input.TrimEnd().Replace("\n", "----").Split(AccountPasswordSeparator);
+
+        //    string trimedString = upsertViewModel.Input.TrimEnd();
+        //    Dictionary<string, string> keyValuePairs = trimedString.Split('\n')
+        //                                                  .Select(value => value.Split('-'))
+        //                                                  .ToDictionary(pair => pair[0], pair => pair[1]);
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.SaveChanges();
+        //        return RedirectToAction("");
+        //    }
+
+        //    return View();
+        //}
 
         // Bulk upsert
         // POST: Accounts/Upsert
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Upsert(Account account)
+        public ActionResult Upsert(UpsertViewModel upsertViewModel)
         {
             Trace.WriteLine("POST /Accounts/Upsert");
+            string[] stringSeparators = new string[] { "----", "---", "--", "-" };
 
-            if (ModelState.IsValid)
+            if (!IsCsvFile(upsertViewModel.UploadedCSVFile))
             {
-                db.Accounts.Add(account);
-                db.SaveChanges();
-                return RedirectToAction("");
+                //Error message
+                return View();
             }
 
-            return View(account);
+            // Verify that the user selected a file
+            if (upsertViewModel.UploadedCSVFile != null && upsertViewModel.UploadedCSVFile.ContentLength > 0)
+            {
+
+                StreamReader csvReader = new StreamReader(upsertViewModel.UploadedCSVFile.InputStream);
+                {
+                    string inputLine = "";
+                    while ((inputLine = csvReader.ReadLine()) != null)
+                    {
+                        string[] values = inputLine.Split(stringSeparators, StringSplitOptions.None);
+
+                        string accountId = values[0];
+                        var returnedAccount = db.Accounts.Find(accountId);
+                        // New account to be added
+                        if (returnedAccount == null)
+                        {
+                            Account newAccount = new Account();
+                            newAccount.AccountId = values[0];
+                            newAccount.Password = values[1];
+                            newAccount.AccountType = upsertViewModel.NewAccountType;
+                            db.Accounts.Add(newAccount);
+                        }
+                        else
+                        {
+
+                        }
+
+                        db.SaveChanges();
+                    }
+                    csvReader.Close();
+                }
+            }
+
+            return View();
+        }
+
+        private bool IsCsvFile(HttpPostedFileBase inputFile)
+        {
+            if (inputFile == null)
+            {
+                return false;
+            }
+
+            int lastIndexOfDot = inputFile.FileName.LastIndexOf('.');
+            string fileTypeName = inputFile.FileName.Substring(lastIndexOfDot + 1).ToUpper();
+            if (fileTypeName == "CSV")
+            {
+                return true;
+            }
+
+            return false;
         }
 
 
